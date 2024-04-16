@@ -10,17 +10,17 @@ def main():
     while True:
         try:
             # Prompt the user for input on exchanges and quantity
-            exchanges = input("Please enter a comma-separated list of exchanges (or press Ctrl + D to exit): ").strip()
-            quantity_str = input("Please enter the quantity (or press Ctrl + D to exit): ").strip()
+            exchanges = input("Please enter a comma-separated list of exchanges (or press Ctrl + D to exit) Default ['Coinbase', 'Gemini', 'Kraken']: ").strip()
+            quantity_str = input("Please enter the quantity (or press Ctrl + D to exit) Default '10': ").strip()
 
-            # Handle empty input
-            if not exchanges or not quantity_str:
-                print("Invalid input. Please provide valid exchanges and quantity.")
-                continue
-
-            # Parse the exchanges and quantity
-            exchanges_list = exchanges.split(',')
-            quantity = int(quantity_str)
+            if not exchanges:
+                exchanges_list = ['Coinbase', 'Gemini', 'Kraken']
+            else:
+                exchanges_list = exchanges.split(',')
+            if not quantity_str:
+                quantity = 10
+            else:
+                quantity = int(quantity_str)
 
             print(f"Exchanges: {exchanges_list}")
 
