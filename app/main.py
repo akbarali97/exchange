@@ -22,8 +22,6 @@ def main():
             else:
                 quantity = int(quantity_str)
 
-            print(f"Exchanges: {exchanges_list}")
-
             # Create an instance of the Order class
             order_obj = Order()
 
@@ -41,7 +39,7 @@ def main():
 
                 sell_amount, sell_qty = get_price_to_sell_btc(required_qty=quantity)
                 print(f'Price to sell {sell_qty} bitcoins: {sell_amount}')
-            print('\n\n\n')
+            print('\n\n')
         # Handle Ctrl + D (EOFError) gracefully to exit the loop
         except EOFError:
             print("\nEnd of input detected. Exiting the program.")
