@@ -1,51 +1,58 @@
-import sys
 import argparse
 from get_orders import Order
 from db import get_session, initialize_database
 from helpers import *
 
 def main():
+    # Initialize the database session
     session = get_session()
+    # Run the code in a loop
+    while True:
+        try:
+            # Prompt the user for input on exchanges and quantity
+            exchanges = input("Please enter a comma-separated list of exchanges (or press Ctrl + D to exit): ").strip()
+            quantity_str = input("Please enter the quantity (or press Ctrl + D to exit): ").strip()
 
-    args = sys.argv[1:]
-    parser = argparse.ArgumentParser(description="Run the app.")
-    parser.add_argument("--show-log", action="store_true", help="Show logs")
-    parser.add_argument("--exchanges", type=str,
-                        help="Comma-separated list of exchanges")
-    parsed_args = parser.parse_args(args)
+            # Handle empty input
+            if not exchanges or not quantity_str:
+                print("Invalid input. Please provide valid exchanges and quantity.")
+                continue
 
-    parsed_args.show_log
-    parsed_args.exchanges
+            # Parse the exchanges and quantity
+            exchanges_list = exchanges.split(',')
+            quantity = int(quantity_str)
 
-    order_obj = Order()
+            print(f"Exchanges: {exchanges_list}")
 
-    session.add_all(order_obj.orders())
-    session.commit()
+            # Create an instance of the Order class
+            order_obj = Order()
 
-    # # Query to filter and sort bids (highest price first)
-    # bids = session.query(OrderBook).filter(OrderBook.order_type == 'bid').order_by(
-    #     OrderBook.amount.desc()).limit(10).all()
+            # Fetch orders based on the provided exchanges
+            orders = order_obj.orders(exchanges=exchanges_list)
 
-    # # Query to filter and sort asks (lowest price first)
-    # asks = session.query(OrderBook).filter(OrderBook.order_type == 'ask').order_by(
-    #     OrderBook.amount.asc()).limit(10).all()
+            # Add all fetched orders to the session and commit
+            session.add_all(orders)
+            session.commit()
 
-    # # Print sorted bids and asks
-    # print('\n\n\n')
-    # print('========================== Bids ==========================')
-    # for bid in bids:
-    #     print(bid)
+            # Perform the necessary operations with the quantity
+            if quantity:
+                buy_amount, buy_qty = get_price_to_buy_btc(required_qty=quantity)
+                print(f'Price to buy {buy_qty} bitcoins: {buy_amount}')
 
-    # print('\n\n\n')
-    # print('========================== Asks ==========================')
-    # for ask in asks:
-    #     print(ask)
-
-
-    print('\n\n\n')
-    print(f'price to Buy 10 bitcoins: {get_price_to_buy_10_btc()}')
-    print(f'price to Sell 10 bitcoins: {get_price_to_sell_10_btc()}')
+                sell_amount, sell_qty = get_price_to_sell_btc(required_qty=quantity)
+                print(f'Price to sell {sell_qty} bitcoins: {sell_amount}')
+            print('\n\n\n')
+        # Handle Ctrl + D (EOFError) gracefully to exit the loop
+        except EOFError:
+            print("\nEnd of input detected. Exiting the program.")
+            break
+        # Handle invalid quantity input (ValueError)
+        except ValueError:
+            print("Invalid quantity entered. Please enter a numeric value.")
 
 if __name__ == "__main__":
+    # Initialize the database
     initialize_database()
+    
+    # Run the main function
     main()
