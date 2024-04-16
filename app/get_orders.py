@@ -125,5 +125,13 @@ class Order:
 
         return orders
 
-    def orders(self):
-         return self.kraken_orders() + self.gemini_orders() + self.coinbase_orders()
+
+    def orders(self, exchanges=['Kraken', 'Gemini', 'Coinbase']):
+        orders = []
+        if 'Coinbase' in exchanges:
+            orders.extend(self.coinbase_orders())
+        if 'Gemini' in exchanges:
+            orders.extend(self.gemini_orders())
+        if 'Kraken' in exchanges:
+            orders.extend(self.kraken_orders())
+        return orders
