@@ -18,9 +18,9 @@ def main():
             else:
                 exchanges_list = exchanges.split(',')
             if not quantity_str:
-                quantity = 10
+                quantity = 10.0
             else:
-                quantity = int(quantity_str)
+                quantity = float(quantity_str)
 
             # Create an instance of the Order class
             order_obj = Order()
