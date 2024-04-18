@@ -1,3 +1,8 @@
+# Pre-requisites
+
+1. Docker Engine
+
+
 # To Run the script
 
 ```
@@ -15,6 +20,7 @@ And to run
 ```
 docker run -it exchange-app
 ```
+
 
 # Sample Response
 
